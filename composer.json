@@ -1,0 +1,13 @@
+{
+    "name": "nikapps/nikpay",
+    "description": "A package for connecting to Iranian banks for payment ttransactions",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ali Borhani",
+            "email": "aliborhani1@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
