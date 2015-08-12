@@ -1,6 +1,6 @@
 {
     "name": "nikapps/nikpay",
-    "description": "A package for connecting to Iranian banks for payment ttransactions",
+    "description": "A php package for connecting to Iranian banks for payment ttransactions",
     "license": "MIT",
     "authors": [
         {
@@ -9,5 +9,13 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Nikapps\\NikPay\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^2.2"
+    }
 }

@@ -1,0 +1,8 @@
+<form action="{url}" method="post" id="payment">
+    <input type="hidden" name="Token" value="{token}"/>
+    <input type="hidden" name="RedirectURL" value="{redirect}"/>
+</form>
+
+<script>
+    document.getElementById("payment").submit();
+</script>
