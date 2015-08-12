@@ -7,7 +7,6 @@ use Nikapps\NikPay\PaymentProviders\PaymentProvider;
 use Nikapps\NikPay\PaymentProviders\Saman\Saman;
 use Nikapps\NikPay\PaymentProviders\Saman\SamanConfig;
 use Nikapps\NikPay\Soap\PhpSoapService;
-use Nikapps\NikPay\Soap\SoapService;
 
 class NikPay
 {

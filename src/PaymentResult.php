@@ -38,12 +38,12 @@ class PaymentResult
 
     function __construct($result)
     {
-        $this->state = Utils::value($result['state'], 'OK');
-        $this->merchantId = Utils::value($result['merchant'], '');
-        $this->reference = Utils::value($result['reference'], '');
-        $this->invoice = Utils::value($result['invoice'], '');
-        $this->traceNumber = Utils::value($result['trace'], '');
-        $this->amount = Utils::value($result['amount'], 0);
+        $this->state = Utils::value($result, 'state', 'OK');
+        $this->merchantId = Utils::value($result, 'merchant', '');
+        $this->reference = Utils::value($result, 'reference', '');
+        $this->invoice = Utils::value($result, 'invoice', '');
+        $this->traceNumber = Utils::value($result, 'trace', '');
+        $this->amount = Utils::value($result, 'amount', 0);
     }
 
 

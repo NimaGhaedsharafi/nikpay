@@ -38,10 +38,10 @@ class Purchase
     function __construct(array $purchase = [])
     {
 
-        $this->amount = Utils::value($purchase['amount'], 0);
-        $this->rial = Utils::value($purchase['rial'], true);
-        $this->invoice = Utils::value($purchase['invoice'], '');
-        $this->options = Utils::value($purchase['options'], []);
+        $this->amount = Utils::value($purchase, 'amount', 0);
+        $this->rial = Utils::value($purchase, 'rial', true);
+        $this->invoice = Utils::value($purchase, 'invoice', '');
+        $this->options = Utils::value($purchase, 'options', []);
 
     }
 

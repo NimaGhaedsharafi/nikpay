@@ -72,14 +72,14 @@ class SamanConfig implements PaymentConfig
     public static function generateFromArray(array $config)
     {
         return (new SamanConfig())
-            ->setUsername(Utils::value($config['username'], ''))
-            ->setPassword(Utils::value($config['password'], ''))
-            ->setMerchantId(Utils::value($config['merchant'], ''))
-            ->setGatewayUrl(Utils::value($config['gateway']))
-            ->setWebServiceUrl(Utils::value($config['webservice']))
-            ->setTokenUrl(Utils::value($config['token_url']))
-            ->setSoapOptions(Utils::value($config['soap_options']))
-            ->setRedirectUrl(Utils::value($config['redirect_url']));
+            ->setUsername(Utils::value($config, 'username', ''))
+            ->setPassword(Utils::value($config, 'password', ''))
+            ->setMerchantId(Utils::value($config, 'merchant', ''))
+            ->setGatewayUrl(Utils::value($config, 'gateway'))
+            ->setWebServiceUrl(Utils::value($config, 'webservice'))
+            ->setTokenUrl(Utils::value($config, 'token_url'))
+            ->setSoapOptions(Utils::value($config, 'soap_options'))
+            ->setRedirectUrl(Utils::value($config, 'redirect_url'));
     }
 
     /**
