@@ -2,6 +2,7 @@
 namespace Nikapps\NikPay;
 
 use Nikapps\NikPay\Exceptions\BankNotFoundException;
+use Nikapps\NikPay\Exceptions\NotFoundConfigurationException;
 use Nikapps\NikPay\PaymentProviders\PaymentConfig;
 use Nikapps\NikPay\PaymentProviders\PaymentProvider;
 use Nikapps\NikPay\PaymentProviders\Saman\Saman;
@@ -45,12 +46,12 @@ class NikPay
      * @return PaymentProvider
      * @throws BankNotFoundException
      */
-    protected function generatePayment($bank, PaymentConfig $config)
+    protected function generatePayment($bank, PaymentConfig $config = null)
     {
 
-        if (is_null($config)) {
-            $config = $this->configs[$bank];
-        }
+        $this->guardAgainstNoConfiguration($bank, $config);
+
+        $config = is_null($config) ? $this->configs[$bank] : $config;
 
         switch ($bank) {
 
@@ -74,5 +75,19 @@ class NikPay
     protected function generateSamanPayment(SamanConfig $config)
     {
         return new Saman(new PhpSoapService(), $config);
+    }
+
+    /**
+     * verify there is a configuration for given bank
+     *
+     * @param string $bank
+     * @param PaymentConfig $config
+     * @throws NotFoundConfigurationException
+     */
+    private function guardAgainstNoConfiguration($bank, PaymentConfig $config = null)
+    {
+        if (is_null($config) && !isset($this->configs[$bank])) {
+            throw new NotFoundConfigurationException;
+        }
     }
 } 
