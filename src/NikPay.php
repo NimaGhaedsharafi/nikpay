@@ -7,12 +7,16 @@ use Nikapps\NikPay\PaymentProviders\PaymentConfig;
 use Nikapps\NikPay\PaymentProviders\PaymentProvider;
 use Nikapps\NikPay\PaymentProviders\Saman\Saman;
 use Nikapps\NikPay\PaymentProviders\Saman\SamanConfig;
+use Nikapps\NikPay\PaymentProviders\Saman\SamanTranslator;
+use Nikapps\NikPay\PaymentProviders\Translator;
 use Nikapps\NikPay\Soap\PhpSoapService;
 
 class NikPay
 {
 
     protected $configs = [];
+
+    protected $translators = [];
 
     /**
      * Set default config for bank
@@ -23,6 +27,32 @@ class NikPay
     public function useConfig($bank, PaymentConfig $config)
     {
         $this->configs[$bank] = $config;
+    }
+
+    /**
+     * Set default error/state translator for bank
+     *
+     * @param string $bank
+     * @param Translator $translator
+     */
+    public function useTranslator($bank, Translator $translator)
+    {
+        $this->translators[$bank] = $translator;
+    }
+
+    /**
+     * Get error/state translator for bank
+     *
+     * @param string $bank
+     * @return Translator
+     */
+    public function translator($bank)
+    {
+        if (!isset($this->translators[$bank])) {
+            $this->generateDefaultTranslator($bank);
+        }
+
+        return $this->translators[$bank];
     }
 
     /**
@@ -84,10 +114,24 @@ class NikPay
      * @param PaymentConfig $config
      * @throws NotFoundConfigurationException
      */
-    private function guardAgainstNoConfiguration($bank, PaymentConfig $config = null)
+    protected function guardAgainstNoConfiguration($bank, PaymentConfig $config = null)
     {
         if (is_null($config) && !isset($this->configs[$bank])) {
             throw new NotFoundConfigurationException;
         }
     }
-} 
+
+    /**
+     * Generate default error/state translator for bank
+     *
+     * @param string $bank
+     */
+    protected function generateDefaultTranslator($bank)
+    {
+        switch ($bank) {
+            case Bank::SAMAN:
+                $this->translators[$bank] = new SamanTranslator();
+        }
+    }
+
+}
