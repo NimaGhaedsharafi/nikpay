@@ -3,7 +3,6 @@ namespace Nikapps\NikPay\PaymentProviders;
 
 interface Translator
 {
-
     /**
      * Translate/Describe error or state code
      *
@@ -29,4 +28,4 @@ interface Translator
      * @return string|integer
      */
     public function describe($code);
-} 
+}

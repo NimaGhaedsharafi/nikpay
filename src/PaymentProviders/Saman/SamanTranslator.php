@@ -5,8 +5,6 @@ use Nikapps\NikPay\PaymentProviders\Translator;
 
 class SamanTranslator implements Translator
 {
-
-
     protected $states;
     protected $errors;
 
@@ -25,7 +23,6 @@ class SamanTranslator implements Translator
         }
 
         return isset($this->errors[$code]) ? $this->errors[$code] : $code;
-
     }
 
     /**

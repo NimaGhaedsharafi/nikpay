@@ -3,7 +3,6 @@ namespace Nikapps\NikPay\Exceptions;
 
 class FailedPaymentException extends PaymentException
 {
-
     protected $message = "Transaction was not successful";
 
     /**
@@ -31,6 +30,4 @@ class FailedPaymentException extends PaymentException
 
         return $this;
     }
-
-
-} 
+}

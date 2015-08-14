@@ -3,7 +3,6 @@ namespace Nikapps\NikPay\Exceptions;
 
 class SoapException extends PaymentException
 {
-
     protected $message = "SoapClient is failed";
 
     /**
@@ -31,6 +30,4 @@ class SoapException extends PaymentException
 
         return $this;
     }
-
-
-} 
+}

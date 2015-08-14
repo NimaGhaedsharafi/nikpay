@@ -13,7 +13,6 @@ use Nikapps\NikPay\Soap\PhpSoapService;
 
 class NikPay
 {
-
     protected $configs = [];
 
     protected $translators = [];
@@ -78,7 +77,6 @@ class NikPay
      */
     protected function generatePayment($bank, PaymentConfig $config = null)
     {
-
         $this->guardAgainstNoConfiguration($bank, $config);
 
         $config = is_null($config) ? $this->configs[$bank] : $config;
@@ -133,5 +131,4 @@ class NikPay
                 $this->translators[$bank] = new SamanTranslator();
         }
     }
-
 }

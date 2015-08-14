@@ -3,7 +3,6 @@ namespace Nikapps\NikPay\Utils;
 
 class Utils
 {
-
     /**
      * Return value if it's set otherwise return default value
      *
@@ -16,4 +15,4 @@ class Utils
     {
         return isset($data[$key]) ? $data[$key] : $default;
     }
-} 
+}

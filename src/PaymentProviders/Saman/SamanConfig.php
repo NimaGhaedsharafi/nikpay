@@ -6,7 +6,6 @@ use Nikapps\NikPay\Utils\Utils;
 
 class SamanConfig implements PaymentConfig
 {
-
     /**
      * Username (= merchant id)
      *
@@ -97,7 +96,6 @@ class SamanConfig implements PaymentConfig
     public function setGatewayUrl($gatewayUrl)
     {
         if (!is_null($gatewayUrl)) {
-
             $this->gatewayUrl = $gatewayUrl;
         }
 
@@ -176,7 +174,6 @@ class SamanConfig implements PaymentConfig
     public function setWebServiceUrl($webServiceUrl)
     {
         if (!is_null($webServiceUrl)) {
-
             $this->webServiceUrl = $webServiceUrl;
         }
 
@@ -239,5 +236,4 @@ class SamanConfig implements PaymentConfig
     {
         return $this->tokenUrl;
     }
-
 }

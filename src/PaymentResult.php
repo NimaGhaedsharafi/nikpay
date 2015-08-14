@@ -5,7 +5,6 @@ use Nikapps\NikPay\Utils\Utils;
 
 class PaymentResult
 {
-
     /**
      * @var string|integer
      */
@@ -36,7 +35,7 @@ class PaymentResult
      */
     protected $traceNumber;
 
-    function __construct($result)
+    public function __construct($result)
     {
         $this->state = Utils::value($result, 'state', 'OK');
         $this->merchantId = Utils::value($result, 'merchant', '');
@@ -172,6 +171,4 @@ class PaymentResult
     {
         return $this->traceNumber();
     }
-
-
-} 
+}

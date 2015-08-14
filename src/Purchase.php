@@ -5,7 +5,6 @@ use Nikapps\NikPay\Utils\Utils;
 
 class Purchase
 {
-
     /**
      * @var integer
      */
@@ -35,14 +34,12 @@ class Purchase
      *
      * @param array $purchase
      */
-    function __construct(array $purchase = [])
+    public function __construct(array $purchase = [])
     {
-
         $this->amount = Utils::value($purchase, 'amount', 0);
         $this->rial = Utils::value($purchase, 'rial', true);
         $this->invoice = Utils::value($purchase, 'invoice', '');
         $this->options = Utils::value($purchase, 'options', []);
-
     }
 
     /**
@@ -143,5 +140,4 @@ class Purchase
     {
         return $this->isRial() ? $this->amount : $this->amount * 10;
     }
-
 }

@@ -3,7 +3,6 @@ namespace Nikapps\NikPay;
 
 interface InvoiceVerifier
 {
-
     /**
      * Verify reference is not already exist (checking for double spending)
      *
@@ -18,4 +17,4 @@ interface InvoiceVerifier
      * @return boolean true if amount is valid
      */
     public function verifyAmount($invoice, $amount);
-} 
+}

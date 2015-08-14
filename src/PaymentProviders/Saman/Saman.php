@@ -15,7 +15,6 @@ use Nikapps\NikPay\Soap\SoapService;
 
 class Saman implements PaymentProvider
 {
-
     /**
      * Soap client
      *
@@ -45,7 +44,7 @@ class Saman implements PaymentProvider
      * @param SoapService $client
      * @param SamanConfig $config
      */
-    function __construct(SoapService $client, SamanConfig $config)
+    public function __construct(SoapService $client, SamanConfig $config)
     {
         $this->client = $client;
         $this->config = $config;
@@ -76,13 +75,9 @@ class Saman implements PaymentProvider
         $parameters = array_merge($parameters, $purchase->getOptions());
 
         try {
-
             $this->token = $client->call('RequestToken', $parameters);
-
         } catch (\SoapFault $e) {
-
             throw (new SoapException())->setSoapFault($e);
-
         }
 
         return $this;
@@ -121,7 +116,6 @@ class Saman implements PaymentProvider
      */
     public function generateForm($form = null, $token = null)
     {
-
         if (is_null($form)) {
             $form = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'form.stub');
         }
@@ -207,7 +201,6 @@ class Saman implements PaymentProvider
         ];
 
         try {
-
             $result = $client->call('verifyTransaction', $parameters);
 
             if ($result < 0) {
@@ -215,9 +208,7 @@ class Saman implements PaymentProvider
             }
 
             return $result;
-
         } catch (\SoapFault $e) {
-
             throw (new SoapException())->setSoapFault($e);
         }
     }
@@ -290,7 +281,6 @@ class Saman implements PaymentProvider
         if (!$ok) {
             throw new InvalidPostDataException;
         }
-
     }
 
     /**
@@ -318,18 +308,12 @@ class Saman implements PaymentProvider
         ];
 
         try {
-
             $result = $client->call('reverseTransaction', $parameters);
 
             return $result > 0 ? true : false;
-
         } catch (\SoapFault $e) {
-
             throw (new SoapException)->setSoapFault($e);
-
         }
-
-
     }
 
     /**
@@ -380,7 +364,6 @@ class Saman implements PaymentProvider
      */
     protected function generateResult(array $data, $amount)
     {
-
         $state = $data['State'];
         $reference = $data['RefNum'];
         $invoice = $data['ResNum'];

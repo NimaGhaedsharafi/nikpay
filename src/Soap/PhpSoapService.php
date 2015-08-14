@@ -5,7 +5,6 @@ use Nikapps\NikPay\Exceptions\SoapException;
 
 class PhpSoapService implements SoapService
 {
-
     /**
      * @var string
      */
@@ -146,4 +145,4 @@ class PhpSoapService implements SoapService
     {
         return $this->call($name, $parameters);
     }
-} 
+}

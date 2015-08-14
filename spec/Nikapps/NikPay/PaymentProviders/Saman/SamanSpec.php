@@ -15,19 +15,17 @@ use Prophecy\Argument;
 
 class SamanSpec extends ObjectBehavior
 {
-
-    function let(SoapService $soap, SamanConfig $samanConfig)
+    public function let(SoapService $soap, SamanConfig $samanConfig)
     {
-
         $this->beConstructedWith($soap, $samanConfig);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Nikapps\NikPay\PaymentProviders\Saman\Saman');
     }
 
-    function it_should_fetch_token_for_given_purchase_and_return_form_data(Purchase $purchase, $samanConfig, $soap)
+    public function it_should_fetch_token_for_given_purchase_and_return_form_data(Purchase $purchase, $samanConfig, $soap)
     {
         $config = $this->getDefaultConfig();
 
@@ -51,7 +49,7 @@ class SamanSpec extends ObjectBehavior
         $this->form()->shouldHaveKeyWithValue('token', 'token-123456');
     }
 
-    function it_should_generate_custom_html_form($samanConfig)
+    public function it_should_generate_custom_html_form($samanConfig)
     {
         $this->mockConfig($samanConfig);
         $config = $this->getDefaultConfig();
@@ -60,12 +58,10 @@ class SamanSpec extends ObjectBehavior
         $output = "<span>token-123-123, {$config['gateway']}, {$config['redirect_url']}</span>";
 
         $this->generateForm($form, 'token-123-123')->shouldBe($output);
-
     }
 
-    function it_should_generate_default_html_form($samanConfig)
+    public function it_should_generate_default_html_form($samanConfig)
     {
-
         $this->mockConfig($samanConfig);
         $config = $this->getDefaultConfig();
 
@@ -81,7 +77,7 @@ class SamanSpec extends ObjectBehavior
         $this->generateForm(null, 'token-123-123')->shouldBe($output);
     }
 
-    function it_should_verify_payment_and_return_amount($soap, $samanConfig)
+    public function it_should_verify_payment_and_return_amount($soap, $samanConfig)
     {
         $config = $this->getDefaultConfig();
 
@@ -98,7 +94,7 @@ class SamanSpec extends ObjectBehavior
         $this->verify('ref-123-123')->shouldBe(1000);
     }
 
-    function it_should_throw_an_exception_when_verifying_is_failed($soap, $samanConfig)
+    public function it_should_throw_an_exception_when_verifying_is_failed($soap, $samanConfig)
     {
         $config = $this->getDefaultConfig();
 
@@ -117,9 +113,8 @@ class SamanSpec extends ObjectBehavior
         )->duringVerify('ref-123-123');
     }
 
-    function it_should_throw_an_exception_when_creating_soap_client_is_failed($soap, $samanConfig)
+    public function it_should_throw_an_exception_when_creating_soap_client_is_failed($soap, $samanConfig)
     {
-
         $this->mockConfig($samanConfig, ['wsdl' => 'bad_url', 'soap_options' => null]);
 
         $soap->wsdl('bad_url')->willReturn($soap);
@@ -131,7 +126,7 @@ class SamanSpec extends ObjectBehavior
             ->duringVerify('ref-123-123');
     }
 
-    function it_should_handle_callback_and_generate_result($soap, $samanConfig, InvoiceVerifier $invoiceVerifier)
+    public function it_should_handle_callback_and_generate_result($soap, $samanConfig, InvoiceVerifier $invoiceVerifier)
     {
         $config = $this->getDefaultConfig();
 
@@ -167,10 +162,9 @@ class SamanSpec extends ObjectBehavior
         $result->traceNumber()->shouldBe('trace-123-123');
         $result->amount()->shouldBe(1000);
         $result->amountInToman()->shouldBe(100);
-
     }
 
-    function it_should_throw_an_exception_when_post_data_is_invalid()
+    public function it_should_throw_an_exception_when_post_data_is_invalid()
     {
         $post = [
             'invalid_state_key' => 'OK',
@@ -183,7 +177,7 @@ class SamanSpec extends ObjectBehavior
             ->duringHandleCallback($post);
     }
 
-    function it_should_throw_an_exception_when_state_is_not_ok()
+    public function it_should_throw_an_exception_when_state_is_not_ok()
     {
         $post = [
             'State'   => 'Canceled By User',
@@ -194,10 +188,9 @@ class SamanSpec extends ObjectBehavior
 
         $this->shouldThrow((new FailedPaymentException)->setState('Canceled By User'))
             ->duringHandleCallback($post);
-
     }
 
-    function it_should_throw_an_exception_when_amount_is_not_equal(
+    public function it_should_throw_an_exception_when_amount_is_not_equal(
         $soap,
         $samanConfig,
         InvoiceVerifier $invoiceVerifier
@@ -234,9 +227,8 @@ class SamanSpec extends ObjectBehavior
         $this->shouldThrow($exception)->duringHandleCallback($post);
     }
 
-    function it_should_throw_an_exception_when_reference_already_exists($samanConfig, InvoiceVerifier $invoiceVerifier)
+    public function it_should_throw_an_exception_when_reference_already_exists($samanConfig, InvoiceVerifier $invoiceVerifier)
     {
-
         $this->mockConfig($samanConfig);
 
         $post = [
@@ -254,9 +246,8 @@ class SamanSpec extends ObjectBehavior
             ->duringHandleCallback($post);
     }
 
-    function it_should_successfully_refund_payment($soap, $samanConfig)
+    public function it_should_successfully_refund_payment($soap, $samanConfig)
     {
-
         $config = $this->getDefaultConfig();
 
         $this->mockConfig($samanConfig);
@@ -272,7 +263,6 @@ class SamanSpec extends ObjectBehavior
         $soap->call('reverseTransaction', $params)->willReturn(1);
 
         $this->refund('ref-123-123')->shouldBe(true);
-
     }
 
     /**
@@ -293,7 +283,6 @@ class SamanSpec extends ObjectBehavior
         $config->getGatewayUrl()->willReturn($data['gateway']);
         $config->getRedirectUrl()->willReturn($data['redirect_url']);
         $config->getSoapOptions()->willReturn($data['soap_options']);
-
     }
 
     /**

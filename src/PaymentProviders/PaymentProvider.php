@@ -7,7 +7,6 @@ use Nikapps\NikPay\Purchase;
 
 interface PaymentProvider
 {
-
     /**
      * Prepare a payment (i.e. fetching token/refId)
      *

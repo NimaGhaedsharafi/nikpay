@@ -3,7 +3,6 @@ namespace Nikapps\NikPay\PaymentProviders;
 
 interface PaymentConfig
 {
-
     /**
      * Generate config object from array
      *
@@ -11,5 +10,4 @@ interface PaymentConfig
      * @return self
      */
     public static function generateFromArray(array $config);
-
-} 
+}
