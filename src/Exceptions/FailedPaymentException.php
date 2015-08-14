@@ -4,6 +4,8 @@ namespace Nikapps\NikPay\Exceptions;
 class FailedPaymentException extends PaymentException
 {
 
+    protected $message = "Transaction was not successful";
+
     /**
      * Payment state
      *

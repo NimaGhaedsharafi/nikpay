@@ -113,7 +113,7 @@ class SamanSpec extends ObjectBehavior
         $soap->call('verifyTransaction', $params)->willReturn(-3);
 
         $this->shouldThrow(
-            new NotVerifiedException('Payment is not verified', -3)
+            new NotVerifiedException('Payment is not verified by bank', -3)
         )->duringVerify('ref-123-123');
     }
 

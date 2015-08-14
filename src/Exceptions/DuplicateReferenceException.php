@@ -4,6 +4,8 @@ namespace Nikapps\NikPay\Exceptions;
 class DuplicateReferenceException extends PaymentException
 {
 
+    protected $message = "The reference number already exists";
+
     /**
      * @var string
      */

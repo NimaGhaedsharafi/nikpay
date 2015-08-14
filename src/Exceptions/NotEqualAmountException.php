@@ -4,6 +4,7 @@ namespace Nikapps\NikPay\Exceptions;
 class NotEqualAmountException extends PaymentException
 {
 
+    protected $message = "Given amount form bank is not equal to provided amount";
     /**
      * @var string
      */
