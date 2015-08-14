@@ -110,12 +110,20 @@ class Saman implements PaymentProvider
     /**
      * Generate html form for redirecting user to bank gateway
      *
-     * @param null|string $form Custom html form
+     * @param null|string|\Closure $form Custom html form
      * @param string $token [Optional] if token is fetched manually
      * @return string
      */
     public function generateForm($form = null, $token = null)
     {
+        if ($form instanceof \Closure) {
+            return $form([
+                'token'    => $token,
+                'redirect' => $this->config->getRedirectUrl(),
+                'gateway'  => $this->config->getGatewayUrl()
+            ]);
+        }
+
         if (is_null($form)) {
             $form = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'form.stub');
         }
@@ -136,7 +144,7 @@ class Saman implements PaymentProvider
      * Alias of generateForm
      *
      * @see $this::generateForm()
-     * @param null|string $form Custom html form
+     * @param null|string|\Closure $form Custom html form
      * @param string $token [Optional] if token is fetched manually
      * @return string
      */

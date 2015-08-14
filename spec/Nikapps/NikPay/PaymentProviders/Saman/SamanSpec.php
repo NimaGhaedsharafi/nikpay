@@ -25,8 +25,11 @@ class SamanSpec extends ObjectBehavior
         $this->shouldHaveType('Nikapps\NikPay\PaymentProviders\Saman\Saman');
     }
 
-    public function it_should_fetch_token_for_given_purchase_and_return_form_data(Purchase $purchase, $samanConfig, $soap)
-    {
+    public function it_should_fetch_token_for_given_purchase_and_return_form_data(
+        Purchase $purchase,
+        $samanConfig,
+        $soap
+    ) {
         $config = $this->getDefaultConfig();
 
         $this->mockConfig($samanConfig);
@@ -58,6 +61,25 @@ class SamanSpec extends ObjectBehavior
         $output = "<span>token-123-123, {$config['gateway']}, {$config['redirect_url']}</span>";
 
         $this->generateForm($form, 'token-123-123')->shouldBe($output);
+    }
+
+    public function it_should_call_closure_when_a_closure_passed($samanConfig)
+    {
+        $this->mockConfig($samanConfig);
+        $config = $this->getDefaultConfig();
+
+        $form = $this->generateForm(
+            function (array $data) {
+
+                return $data;
+
+            },
+            'token-123-123'
+        );
+
+        $form->shouldHaveKeyWithValue('token', 'token-123-123');
+        $form->shouldHaveKeyWithValue('gateway', $config['gateway']);
+        $form->shouldHaveKeyWithValue('redirect', $config['redirect_url']);
     }
 
     public function it_should_generate_default_html_form($samanConfig)
@@ -227,8 +249,10 @@ class SamanSpec extends ObjectBehavior
         $this->shouldThrow($exception)->duringHandleCallback($post);
     }
 
-    public function it_should_throw_an_exception_when_reference_already_exists($samanConfig, InvoiceVerifier $invoiceVerifier)
-    {
+    public function it_should_throw_an_exception_when_reference_already_exists(
+        $samanConfig,
+        InvoiceVerifier $invoiceVerifier
+    ) {
         $this->mockConfig($samanConfig);
 
         $post = [
