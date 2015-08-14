@@ -1,6 +1,8 @@
 <?php
 namespace Nikapps\NikPay\Soap;
 
+use Nikapps\NikPay\Exceptions\SoapException;
+
 interface SoapService
 {
 
@@ -23,6 +25,7 @@ interface SoapService
     /**
      * Create soap client
      *
+     * @throws SoapException
      * @return $this
      */
     public function createClient();

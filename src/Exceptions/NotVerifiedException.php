@@ -4,6 +4,8 @@ namespace Nikapps\NikPay\Exceptions;
 class NotVerifiedException extends PaymentException
 {
 
+    protected $message = 'Payment is not verified';
+
     /**
      * @var integer
      */

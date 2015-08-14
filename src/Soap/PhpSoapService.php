@@ -1,6 +1,8 @@
 <?php
 namespace Nikapps\NikPay\Soap;
 
+use Nikapps\NikPay\Exceptions\SoapException;
+
 class PhpSoapService implements SoapService
 {
 
@@ -48,11 +50,16 @@ class PhpSoapService implements SoapService
     /**
      * Create soap client
      *
+     * @throws SoapException
      * @return $this
      */
     public function createClient()
     {
-        $this->client = new \SoapClient($this->wsdl, $this->options);
+        try {
+            $this->client = new \SoapClient($this->wsdl, $this->options);
+        } catch (\SoapFault $e) {
+            throw (new SoapException)->setSoapFault($e);
+        }
 
         return $this;
     }

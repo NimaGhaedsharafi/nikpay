@@ -38,18 +38,20 @@ interface PaymentProvider
      * Generate html form for redirecting user to bank gateway
      *
      * @param null|string $form Custom html form
+     * @param string $token [Optional] if token is fetched manually
      * @return string
      */
-    public function generateForm($form = null);
+    public function generateForm($form = null, $token = null);
 
     /**
      * Alias of generateForm
      *
      * @see $this::generateForm()
      * @param null|string $form Custom html form
+     * @param string $token [Optional] if token is fetched manually
      * @return string
      */
-    public function redirect($form = null);
+    public function redirect($form = null, $token = null);
 
     /**
      * Get form data for redirecting user manually to bank gateway

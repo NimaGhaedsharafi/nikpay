@@ -1,4 +1,4 @@
-<form action="{url}" method="post" id="payment">
+<form action="{gateway}" method="post" id="payment">
     <input type="hidden" name="Token" value="{token}"/>
     <input type="hidden" name="RedirectURL" value="{redirect}"/>
 </form>

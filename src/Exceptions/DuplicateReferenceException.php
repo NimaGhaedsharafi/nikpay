@@ -1,7 +1,7 @@
 <?php
 namespace Nikapps\NikPay\Exceptions;
 
-class DuplicateReferenceException
+class DuplicateReferenceException extends PaymentException
 {
 
     /**

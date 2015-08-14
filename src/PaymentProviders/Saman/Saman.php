@@ -4,7 +4,7 @@ namespace Nikapps\NikPay\PaymentProviders\Saman;
 use Nikapps\NikPay\Exceptions\DuplicateReferenceException;
 use Nikapps\NikPay\Exceptions\FailedPaymentException;
 use Nikapps\NikPay\Exceptions\NotEqualAmountException;
-use Nikapps\NikPay\Exceptions\NotValidPostDataException;
+use Nikapps\NikPay\Exceptions\InvalidPostDataException;
 use Nikapps\NikPay\Exceptions\NotVerifiedException;
 use Nikapps\NikPay\Exceptions\SoapException;
 use Nikapps\NikPay\InvoiceVerifier;
@@ -116,18 +116,22 @@ class Saman implements PaymentProvider
      * Generate html form for redirecting user to bank gateway
      *
      * @param null|string $form Custom html form
+     * @param string $token [Optional] if token is fetched manually
      * @return string
      */
-    public function generateForm($form = null)
+    public function generateForm($form = null, $token = null)
     {
+
         if (is_null($form)) {
             $form = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'form.stub');
         }
 
+        $token = is_null($token) ? $this->token : $token;
+
         return strtr(
             $form,
             [
-                '{token}'    => $this->token,
+                '{token}'    => $token,
                 '{redirect}' => $this->config->getRedirectUrl(),
                 '{gateway}'  => $this->config->getGatewayUrl()
             ]
@@ -139,11 +143,12 @@ class Saman implements PaymentProvider
      *
      * @see $this::generateForm()
      * @param null|string $form Custom html form
+     * @param string $token [Optional] if token is fetched manually
      * @return string
      */
-    public function redirect($form = null)
+    public function redirect($form = null, $token = null)
     {
-        return $this->generateForm($form);
+        return $this->generateForm($form, $token);
     }
 
     /**
@@ -226,7 +231,7 @@ class Saman implements PaymentProvider
      * @throws DuplicateReferenceException
      * @throws FailedPaymentException
      * @throws NotEqualAmountException
-     * @throws NotValidPostDataException
+     * @throws InvalidPostDataException
      * @throws NotVerifiedException
      * @throws SoapException
      *
@@ -270,7 +275,7 @@ class Saman implements PaymentProvider
      * Guard against invalid post data
      *
      * @param array $data
-     * @throws NotValidPostDataException
+     * @throws InvalidPostDataException
      * @return bool
      */
     protected function guardAgainstInvalidPostData(array $data)
@@ -283,7 +288,7 @@ class Saman implements PaymentProvider
         );
 
         if (!$ok) {
-            throw new NotValidPostDataException;
+            throw new InvalidPostDataException;
         }
 
     }
