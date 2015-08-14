@@ -1,15 +1,33 @@
 {
     "name": "nikapps/nikpay",
-    "description": "A php package for connecting to Iranian banks for payment ttransactions",
+    "description": "A php package for connecting to Iranian banks for payment transactions",
+    "keywords": [
+        "nikpay",
+        "shaparak",
+        "saman",
+        "pardakht",
+        "dargah",
+        "payment",
+        "bank",
+        "iran"
+    ],
     "license": "MIT",
     "authors": [
         {
             "name": "Ali Borhani",
             "email": "aliborhani1@gmail.com"
+        },
+        {
+            "name": "Hossein Moradgholi",
+            "email": "hossein@moradgholi.com"
         }
     ],
+    "type": "library",
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+        "php": ">=5.4.0",
+        "ext-soap": "*"
+    },
     "autoload": {
         "psr-4": {
             "Nikapps\\NikPay\\": "src/"
