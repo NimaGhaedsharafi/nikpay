@@ -34,4 +34,10 @@ class NikPaySpec extends ObjectBehavior
         $this->bank('saman')
             ->shouldBeAnInstanceOf('Nikapps\NikPay\PaymentProviders\Saman\Saman');
     }
+
+    function it_should_return_an_instance_of_saman_translator()
+    {
+        $this->translator('saman')
+            ->shouldBeAnInstanceOf('\Nikapps\NikPay\PaymentProviders\Saman\SamanTranslator');
+    }
 }

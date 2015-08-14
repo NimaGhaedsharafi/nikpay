@@ -10,12 +10,6 @@ class SamanTranslator implements Translator
     protected $states;
     protected $errors;
 
-    function __construct()
-    {
-        $this->states = require_once __DIR__ . '/lang/states.php';
-        $this->errors = require_once __DIR__ . '/lang/errors.php';
-    }
-
     /**
      * Translate/Describe error or state code
      *
@@ -24,15 +18,14 @@ class SamanTranslator implements Translator
      */
     public function translate($code)
     {
-        if ((is_string($code))) {
+        $this->load();
+
+        if (is_string($code)) {
             return isset($this->states[$code]) ? $this->states[$code] : $code;
         }
 
-        if (is_int($code) && $code < 0) {
-            return isset($this->errors[$code]) ? $this->errors[$code] : $code;
-        }
+        return isset($this->errors[$code]) ? $this->errors[$code] : $code;
 
-        return $code;
     }
 
     /**
@@ -57,5 +50,19 @@ class SamanTranslator implements Translator
     public function describe($code)
     {
         return $this->translate($code);
+    }
+
+    /**
+     * Load languages
+     */
+    protected function load()
+    {
+        if (!$this->states) {
+            $this->states = require __DIR__ . '/lang/states.php';
+        }
+
+        if (!$this->errors) {
+            $this->errors = require __DIR__ . '/lang/errors.php';
+        }
     }
 }
