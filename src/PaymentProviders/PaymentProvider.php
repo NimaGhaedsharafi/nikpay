@@ -2,11 +2,13 @@
 namespace Nikapps\NikPay\PaymentProviders;
 
 use Nikapps\NikPay\Exceptions\NotVerifiedException;
+use Nikapps\NikPay\InvoiceVerifier;
 use Nikapps\NikPay\PaymentResult;
 use Nikapps\NikPay\Purchase;
 
 interface PaymentProvider
 {
+
     /**
      * Prepare a payment (i.e. fetching token/refId)
      *
@@ -130,4 +132,12 @@ interface PaymentProvider
      * @return mixed
      */
     public function getResult();
+
+    /**
+     * Set invoice verifier for verifying amount & preventing double spending
+     *
+     * @param InvoiceVerifier $invoiceVerifier
+     * @return $this
+     */
+    public function invoiceVerifier(InvoiceVerifier $invoiceVerifier);
 }
