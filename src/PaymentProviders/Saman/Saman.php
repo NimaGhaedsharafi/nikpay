@@ -15,6 +15,7 @@ use Nikapps\NikPay\Soap\SoapService;
 
 class Saman implements PaymentProvider
 {
+
     /**
      * Soap client
      *
@@ -26,6 +27,10 @@ class Saman implements PaymentProvider
      * @var SamanConfig
      */
     private $config;
+
+    /**
+     * @var string
+     */
     private $token = '';
 
     /**
