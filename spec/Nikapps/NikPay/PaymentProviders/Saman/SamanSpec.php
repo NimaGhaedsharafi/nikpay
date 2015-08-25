@@ -159,7 +159,7 @@ class SamanSpec extends ObjectBehavior
             'State'   => 'OK',
             'RefNum'  => 'ref-123-123',
             'ResNum'  => 'inv-123-123',
-            'TraceNo' => 'trace-123-123'
+            'TRACENO' => 'trace-123-123'
         ];
 
         $params = [
@@ -192,7 +192,7 @@ class SamanSpec extends ObjectBehavior
             'invalid_state_key' => 'OK',
             'RefNum'            => 'ref-123-123',
             'ResNum'            => 'inv-123-123',
-            'TraceNo'           => 'trace-123-123'
+            'TRACENO'           => 'trace-123-123'
         ];
 
         $this->shouldThrow('\Nikapps\NikPay\Exceptions\InvalidPostDataException')
@@ -205,7 +205,7 @@ class SamanSpec extends ObjectBehavior
             'State'   => 'Canceled By User',
             'RefNum'  => 'ref-123-123',
             'ResNum'  => 'inv-123-123',
-            'TraceNo' => 'trace-123-123'
+            'TRACENO' => 'trace-123-123'
         ];
 
         $this->shouldThrow((new FailedPaymentException)->setState('Canceled By User'))
@@ -226,7 +226,7 @@ class SamanSpec extends ObjectBehavior
             'State'   => 'OK',
             'RefNum'  => 'ref-123-123',
             'ResNum'  => 'inv-123-123',
-            'TraceNo' => 'trace-123-123'
+            'TRACENO' => 'trace-123-123'
         ];
 
         $params = [
@@ -259,7 +259,7 @@ class SamanSpec extends ObjectBehavior
             'State'   => 'OK',
             'RefNum'  => 'ref-123-123',
             'ResNum'  => 'inv-123-123',
-            'TraceNo' => 'trace-123-123'
+            'TRACENO' => 'trace-123-123'
         ];
 
         $invoiceVerifier->verifyReference('ref-123-123')->willReturn(false);
