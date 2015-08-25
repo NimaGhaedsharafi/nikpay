@@ -39,7 +39,7 @@ class SamanConfig implements PaymentConfig
      *
      * @var string
      */
-    protected $tokenUrl = 'https://sep.shaparak.ir/Payments/InitPayment.asmx';
+    protected $tokenUrl = 'https://sep.shaparak.ir/Payments/InitPayment.asmx?WSDL';
 
     /**
      * Gateway url
