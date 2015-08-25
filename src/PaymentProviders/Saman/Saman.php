@@ -287,8 +287,7 @@ class Saman implements PaymentProvider
         $ok = isset(
             $data['ResNum'],
             $data['RefNum'],
-            $data['State'],
-            $data['TraceNo']
+            $data['State']
         );
 
         if (!$ok) {
@@ -380,7 +379,7 @@ class Saman implements PaymentProvider
         $state = $data['State'];
         $reference = $data['RefNum'];
         $invoice = $data['ResNum'];
-        $trace = $data['TraceNo'];
+        $trace = isset($data['TRACENO']) ? $data['TRACENO'] : 'no-trace';
         $merchant = $this->config->getMerchantId();
 
         $this->result = new PaymentResult(compact(
