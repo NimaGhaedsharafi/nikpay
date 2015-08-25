@@ -5,6 +5,7 @@ use Nikapps\NikPay\Exceptions\SoapException;
 
 interface SoapService
 {
+
     /**
      * Set soap options
      *
@@ -77,4 +78,5 @@ interface SoapService
      * @return mixed
      */
     public function call($function, $parameters);
+
 }

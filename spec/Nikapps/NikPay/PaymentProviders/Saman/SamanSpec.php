@@ -107,8 +107,8 @@ class SamanSpec extends ObjectBehavior
         $this->mockSoapConnection($soap, $config['wsdl'], $config['soap_options']);
 
         $params = [
-            'MerchantID' => $config['merchant'],
-            'RefNum'     => 'ref-123-123'
+            'ref-123-123',
+            $config['merchant']
         ];
 
         $soap->call('verifyTransaction', $params)->willReturn(1000);
@@ -124,8 +124,8 @@ class SamanSpec extends ObjectBehavior
         $this->mockSoapConnection($soap, $config['wsdl'], $config['soap_options']);
 
         $params = [
-            'MerchantID' => $config['merchant'],
-            'RefNum'     => 'ref-123-123'
+            'ref-123-123',
+            $config['merchant']
         ];
 
         $soap->call('verifyTransaction', $params)->willReturn(-3);
@@ -163,8 +163,8 @@ class SamanSpec extends ObjectBehavior
         ];
 
         $params = [
-            'MerchantID' => $config['merchant'],
-            'RefNum'     => 'ref-123-123'
+            'ref-123-123',
+            $config['merchant']
         ];
 
         $soap->call('verifyTransaction', $params)->willReturn(1000);
@@ -230,8 +230,8 @@ class SamanSpec extends ObjectBehavior
         ];
 
         $params = [
-            'MerchantID' => $config['merchant'],
-            'RefNum'     => 'ref-123-123'
+            'ref-123-123',
+            $config['merchant']
         ];
 
         $soap->call('verifyTransaction', $params)->willReturn(1200);

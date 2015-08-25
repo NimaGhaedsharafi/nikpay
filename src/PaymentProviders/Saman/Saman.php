@@ -208,10 +208,7 @@ class Saman implements PaymentProvider
             ->createClient();
 
         // Prepare parameters for soap call
-        $parameters = [
-            'MerchantID' => $this->config->getMerchantId(),
-            'RefNum'     => $reference,
-        ];
+        $parameters = [$reference, $this->config->getMerchantId()];
 
         try {
             $result = $client->call('verifyTransaction', $parameters);
