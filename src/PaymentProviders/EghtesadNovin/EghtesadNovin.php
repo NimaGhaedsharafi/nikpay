@@ -65,6 +65,8 @@ class EghtesadNovin extends AbstractPaymentProvider
     public function prepare(Purchase $purchase)
     {
         $this->purchase = $purchase;
+
+        return $this;
     }
 
     /**
