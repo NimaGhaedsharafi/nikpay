@@ -124,6 +124,30 @@ class Purchase
     }
 
     /**
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed|null
+     */
+    public function getOption($key, $default = null)
+    {
+        return isset($this->options[$key])
+            ? $this->options
+            : $default;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function addOption($key, $value)
+    {
+        $this->options[$key] = $value;
+
+        return $this;
+    }
+
+    /**
      * @return boolean
      */
     public function isRial()
