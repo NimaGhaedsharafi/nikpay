@@ -72,8 +72,8 @@ class Saman implements PaymentProvider
 
         // Prepare parameters for soap call
         $parameters = [
-            'TermID'      => $this->config->getMerchantId(),
-            'ResNUM'      => $purchase->getInvoice(),
+            'TermID' => $this->config->getMerchantId(),
+            'ResNUM' => $purchase->getInvoice(),
             'TotalAmount' => $purchase->getAmountInRial()
         ];
 
@@ -122,11 +122,11 @@ class Saman implements PaymentProvider
     public function generateForm($form = null, $token = null)
     {
         if ($form instanceof \Closure) {
-            return $form([
-                'token'    => $token,
-                'redirect' => $this->config->getRedirectUrl(),
-                'gateway'  => $this->config->getGatewayUrl()
-            ]);
+
+            $formData = $this->form();
+            $formData['token'] = is_null($token) ? $this->token : $token;
+
+            return $form($formData);
         }
 
         if (is_null($form)) {
@@ -138,9 +138,9 @@ class Saman implements PaymentProvider
         return strtr(
             $form,
             [
-                '{token}'    => $token,
+                '{token}' => $token,
                 '{redirect}' => $this->config->getRedirectUrl(),
-                '{gateway}'  => $this->config->getGatewayUrl()
+                '{gateway}' => $this->config->getGatewayUrl()
             ]
         );
     }
@@ -166,9 +166,9 @@ class Saman implements PaymentProvider
     public function form()
     {
         return [
-            'token'    => $this->token,
+            'token' => $this->token,
             'redirect' => $this->config->getRedirectUrl(),
-            'gateway'  => $this->config->getGatewayUrl()
+            'gateway' => $this->config->getGatewayUrl()
         ];
     }
 
@@ -310,8 +310,8 @@ class Saman implements PaymentProvider
 
         // Prepare parameters for soap call
         $parameters = [
-            'MID'      => $this->config->getMerchantId(),
-            'RefNum'   => $reference,
+            'MID' => $this->config->getMerchantId(),
+            'RefNum' => $reference,
             'Username' => $this->config->getUsername(),
             'Password' => $this->config->getPassword()
         ];

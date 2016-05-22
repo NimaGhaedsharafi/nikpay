@@ -6,12 +6,12 @@ class NotVerifiedException extends PaymentException
     protected $message = 'Payment is not verified by bank';
 
     /**
-     * @var integer
+     * @var integer|string
      */
     protected $errorCode;
 
     /**
-     * @return integer
+     * @return integer|string
      */
     public function getErrorCode()
     {
@@ -19,7 +19,7 @@ class NotVerifiedException extends PaymentException
     }
 
     /**
-     * @param integer $errorCode
+     * @param integer|string $errorCode
      * @return $this
      */
     public function setErrorCode($errorCode)
