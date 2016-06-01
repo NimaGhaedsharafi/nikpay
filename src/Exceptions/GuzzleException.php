@@ -1,32 +1,33 @@
 <?php
 namespace Nikapps\NikPay\Exceptions;
 
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 
 class GuzzleException extends PaymentException
 {
     /**
-     * @var ClientException
+     * @var RequestException
      */
-    protected $clientException;
+    protected $requestException;
 
     /**
-     * @return ClientException
+     * @return RequestException
      */
-    public function getClientException()
+    public function getRequestException()
     {
-        return $this->clientException;
+        return $this->requestException;
     }
 
     /**
-     * @param ClientException $clientException
+     * @param RequestException $requestException
      * @return GuzzleException
      */
-    public function setClientException(ClientException $clientException)
+    public function setRequestException(RequestException $requestException)
     {
-        $this->clientException = $clientException;
+        $this->requestException = $requestException;
 
         return $this;
     }
-    
+
+
 }

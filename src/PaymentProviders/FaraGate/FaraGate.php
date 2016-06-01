@@ -2,6 +2,7 @@
 namespace Nikapps\NikPay\PaymentProviders\FaraGate;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use Nikapps\NikPay\Exceptions\DuplicateReferenceException;
 use Nikapps\NikPay\Exceptions\FailedPaymentException;
 use Nikapps\NikPay\Exceptions\GuzzleException;
@@ -80,9 +81,9 @@ class FaraGate extends AbstractPaymentProvider
 
             $this->token = $token;
 
-        } catch (ClientException $e) {
+        } catch (RequestException $e) {
             throw (new GuzzleException)
-                ->setClientException($e);
+                ->setRequestException($e);
         }
 
         return $this;
@@ -168,9 +169,9 @@ class FaraGate extends AbstractPaymentProvider
             if ($status != 1) {
                 throw (new NotVerifiedException)->setErrorCode($status);
             }
-        } catch (ClientException $e) {
+        } catch (RequestException $e) {
             throw (new GuzzleException)
-                ->setClientException($e);
+                ->setRequestException($e);
         }
 
     }
