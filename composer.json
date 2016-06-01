@@ -26,7 +26,8 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "ext-soap": "*"
+        "ext-soap": "*",
+        "guzzlehttp/guzzle": "^6.2"
     },
     "autoload": {
         "psr-4": {

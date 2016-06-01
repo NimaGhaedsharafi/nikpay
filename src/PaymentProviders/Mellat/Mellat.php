@@ -85,7 +85,7 @@ class Mellat extends AbstractPaymentProvider
     {
         // Create soap client for requesting token
         $client = $this->client
-            ->wsdl($this->config->getTokenUrl())
+            ->wsdl($this->config->getWebServiceUrl())
             ->options($this->config->getSoapOptions())
             ->createClient();
 

@@ -137,6 +137,15 @@ class Purchase
 
     /**
      * @param string $key
+     * @return bool
+     */
+    public function hasOption($key)
+    {
+        return isset($this->options[$key]) && !is_null($this->options[$key]);
+    }
+
+    /**
+     * @param string $key
      * @param mixed $value
      * @return $this
      */

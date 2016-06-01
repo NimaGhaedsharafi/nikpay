@@ -1,9 +1,7 @@
 <?php
 namespace Nikapps\NikPay\Exceptions;
 
-use Exception;
-
-class NotFoundInvoiceException extends Exception
+class NotFoundInvoiceException extends PaymentException
 {
     protected $message = 'Invoice number is not found';
 
