@@ -1,0 +1,6 @@
+<form action="{gateway}" method="get" id="payment">
+</form>
+
+<script>
+    document.getElementById("payment").submit();
+</script>

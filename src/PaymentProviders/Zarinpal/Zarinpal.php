@@ -1,11 +1,12 @@
 <?php
-namespace Nikapps\NikPay\PaymentProviders\FaraGate;
+namespace Nikapps\NikPay\PaymentProviders\Zarinpal;
 
 use GuzzleHttp\Exception\RequestException;
 use Nikapps\NikPay\Exceptions\DuplicateReferenceException;
 use Nikapps\NikPay\Exceptions\FailedPaymentException;
 use Nikapps\NikPay\Exceptions\GuzzleException;
 use Nikapps\NikPay\Exceptions\InvalidPostDataException;
+use Nikapps\NikPay\Exceptions\NotFoundAmountException;
 use Nikapps\NikPay\Exceptions\NotImplementedException;
 use Nikapps\NikPay\Exceptions\NotVerifiedException;
 use Nikapps\NikPay\Exceptions\RequestTokenFailedException;
@@ -14,25 +15,19 @@ use Nikapps\NikPay\PaymentResult;
 use Nikapps\NikPay\Purchase;
 use Nikapps\NikPay\Restful\RestClient;
 
-class FaraGate extends AbstractPaymentProvider
+class Zarinpal extends AbstractPaymentProvider
 {
-    /**
-     * @var RestClient
-     */
-    private $client;
-    /**
-     * @var FaraGateConfig
-     */
-    private $config;
-    /**
-     * @var string
-     */
-    protected $token;
-
     /**
      * @var Purchase
      */
     protected $purchase;
+
+    /**
+     * Token/Authority
+     *
+     * @var string
+     */
+    protected $token;
 
     /**
      * @var PaymentResult
@@ -40,14 +35,39 @@ class FaraGate extends AbstractPaymentProvider
     protected $result;
 
     /**
-     * FaraGate constructor.
-     * @param RestClient $client
-     * @param FaraGateConfig $config
+     * @var RestClient
      */
-    public function __construct(RestClient $client, FaraGateConfig $config)
+    private $client;
+    /**
+     * @var ZarinpalConfig
+     */
+    private $config;
+
+    /**
+     * @var ZarinpalAmountFinder
+     */
+    private $amountFinder;
+
+    /**
+     * Zarinpal constructor.
+     * @param RestClient $client
+     * @param ZarinpalConfig $config
+     */
+    public function __construct(RestClient $client, ZarinpalConfig $config)
     {
         $this->client = $client;
         $this->config = $config;
+    }
+
+    /**
+     * @param ZarinpalAmountFinder $amountFinder
+     * @return Zarinpal
+     */
+    public function setAmountFinder($amountFinder)
+    {
+        $this->amountFinder = $amountFinder;
+
+        return $this;
     }
 
     /**
@@ -70,19 +90,17 @@ class FaraGate extends AbstractPaymentProvider
                 ], $this->config->getClientOptions())
             );
 
-            $status = isset($response['Status']) ? $response['Status'] : -1;
-            $token = isset($response['Token']) ? $response['Token'] : null;
+            $status = $response['Status'];
+            $token = $response['Authority'];
 
-            if ($status != 1 || is_null($token)) {
-                throw (new RequestTokenFailedException)
-                    ->setErrorCode($status);
+            if ($status != 100) {
+                throw (new RequestTokenFailedException)->setErrorCode($status);
             }
 
             $this->token = $token;
 
         } catch (RequestException $e) {
-            throw (new GuzzleException)
-                ->setRequestException($e);
+            throw (new GuzzleException)->setRequestException($e);
         }
 
         return $this;
@@ -119,6 +137,7 @@ class FaraGate extends AbstractPaymentProvider
     {
         return [
             'token' => $this->token,
+            'authority' => $this->token,
             'gateway' => $this->config->createGatewayUrl($this->token)
         ];
     }
@@ -143,16 +162,16 @@ class FaraGate extends AbstractPaymentProvider
      *
      * @param string $reference
      * @param array $options [optional]
-     * @return void
+     * @return int|string
      * @throws GuzzleException
      * @throws NotVerifiedException
      */
     public function verify($reference, array $options = [])
     {
         $parameters = [
-            'MerchantCode' => $this->config->getMerchantId(),
-            'Token' => $reference,
-            'SandBox' => $this->config->isSandboxEnabled()
+            'MerchantID' => $this->config->getMerchantId(),
+            'Authority' => $reference,
+            'Amount' => $options['amount']
         ];
 
         try {
@@ -163,16 +182,19 @@ class FaraGate extends AbstractPaymentProvider
                 ], $this->config->getClientOptions())
             );
 
-            $status = isset($response['Status']) ? $response['Status'] : -1;
+            $status = isset($response['Status']) ? $response['Status'] : -99;
+            $traceNumber = isset($response['RefID']) ? $response['RefID'] : null;
 
-            if ($status != 1) {
-                throw (new NotVerifiedException)->setErrorCode($status);
+            if ($status != 100) {
+                throw (new NotVerifiedException)
+                    ->setErrorCode($status);
             }
-        } catch (RequestException $e) {
-            throw (new GuzzleException)
-                ->setRequestException($e);
-        }
 
+            return $traceNumber;
+
+        } catch (RequestException $e) {
+            throw (new GuzzleException)->setRequestException($e);
+        }
     }
 
     /**
@@ -183,6 +205,7 @@ class FaraGate extends AbstractPaymentProvider
      * @throws DuplicateReferenceException
      * @throws FailedPaymentException
      * @throws InvalidPostDataException
+     * @throws NotFoundAmountException
      */
     public function handleCallback(array $data = [])
     {
@@ -191,10 +214,10 @@ class FaraGate extends AbstractPaymentProvider
         $this->guardAgainstInvalidPostData($data);
 
         $status = $data['Status'];
-        $reference = $data['Token'];
+        $reference = $data['Authority'];
 
         // Check status is ok
-        if ($status != 1) {
+        if ($status != 'OK') {
             throw (new FailedPaymentException)->setState($status);
         }
 
@@ -203,9 +226,18 @@ class FaraGate extends AbstractPaymentProvider
             throw (new DuplicateReferenceException)->setReference($reference);
         }
 
-        $this->verify($reference);
+        $amount = $this->amountFinder->find($reference, [
+            'authority' => $reference,
+        ]);
 
-        return $this->generateResult($data);
+        if ($amount === false || is_null($amount)) {
+            throw (new NotFoundAmountException)
+                ->setReference($reference);
+        }
+
+        $traceNumber = $this->verify($reference, compact('amount'));
+
+        return $this->generateResult($data, $traceNumber, $amount);
 
     }
 
@@ -219,7 +251,7 @@ class FaraGate extends AbstractPaymentProvider
      */
     public function refund($reference, array $options = [])
     {
-        // FaraGate does not provide refund endpoint
+        // Zarinpal does not provide refund endpoint
         throw new NotImplementedException;
     }
 
@@ -233,64 +265,34 @@ class FaraGate extends AbstractPaymentProvider
         return $this->result;
     }
 
-    /**
-     * @return array
-     */
+
     protected function createRequestTokenParameters()
     {
         $parameters = [
-            'SandBox' => $this->config->getMerchantId(),
-            'MerchantCode' => $this->config->getMerchantId(),
-            'PriceValue' => $this->purchase->getAmountInRial(),
-            'ReturnUrl' => $this->config->getRedirectUrl(),
-            'PluginName' => $this->config->getPluginName(),
-            'InvoiceNumber' => $this->purchase->getInvoice()
+            'MerchantID' => $this->config->getMerchantId(),
+            'CallbackURL' => $this->config->getRedirectUrl(),
+            'Amount' => $this->purchase->getAmountInRial(),
+            'Description' => $this->purchase->getOption(
+                'note', $this->purchase->getOption('description', '')
+            ),
         ];
 
-        if ($this->purchase->hasOption('name')) {
-            $parameters['PaymenterName'] = $this->purchase->getOption('name');
-        }
-
         if ($this->purchase->hasOption('email')) {
-            $parameters['PaymenterEmail'] = $this->purchase->getOption('email');
+            $parameters['Email'] = $this->purchase->getOption('email');
         }
 
         if ($this->purchase->hasOption('mobile')) {
-            $parameters['PaymenterMobile'] = $this->purchase->getOption('mobile');
-        }
-
-        if ($this->purchase->hasOption('note')) {
-            $parameters['PaymentNote'] = $this->purchase->getOption('note');
-        }
-
-        if ($this->purchase->hasOption('queries')) {
-            $parameters['CustomQuery'] = $this->purchase->getOption('queries');
-        }
-
-        if ($this->purchase->hasOption('posts')) {
-            $parameters['CustomPost'] = $this->purchase->getOption('posts');
-        }
-
-        if ($this->purchase->hasOption('accounts')) {
-            $parameters['ExtraAccountNumbers'] = $this->purchase->getOption('accounts');
-        }
-
-        if ($this->purchase->hasOption('bank')) {
-            $parameters['Bank'] = $this->purchase->getOption('bank');
+            $parameters['Mobile'] = $this->purchase->getOption('mobile');
         }
 
         return $parameters;
+
     }
 
-    /**
-     * @param array $data
-     * @throws InvalidPostDataException
-     */
     protected function guardAgainstInvalidPostData(array $data)
     {
         $ok = isset(
-            $data['InvoiceNumber'],
-            $data['Token'],
+            $data['Authority'],
             $data['Status']
         );
 
@@ -299,18 +301,24 @@ class FaraGate extends AbstractPaymentProvider
         }
     }
 
-    protected function generateResult($data)
+    /**
+     * @param array $data
+     * @param string|int $trace
+     * @param int $amount
+     * @return $this
+     */
+    protected function generateResult(array $data, $trace, $amount)
     {
         $state = $data['Status'];
-        $reference = $data['Token'];
-        $invoice = $data['InvoiceNumber'];
+        $reference = $data['Authority'];
         $merchant = $this->config->getMerchantId();
 
         $this->result = new PaymentResult(compact(
             'state',
             'merchant',
             'reference',
-            'invoice'
+            'trace',
+            'amount'
         ));
 
         return $this;
