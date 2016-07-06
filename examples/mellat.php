@@ -26,8 +26,8 @@ echo $mellat->prepare($purchase)
 
 /* --------- Callback --------- */
 
-$result = $mellat->handleCallback()
-    ->invoiceVerifier(new DefaultInvoiceVerifier())
+$result = $mellat->invoiceVerifier(new DefaultInvoiceVerifier())
+    ->handleCallback()
     ->result();
 
 echo $result->reference();
