@@ -278,10 +278,10 @@ class SamanSpec extends ObjectBehavior
         $this->mockSoapConnection($soap, $config['wsdl'], $config['soap_options']);
 
         $params = [
-            'MID'      => $config['merchant'],
-            'RefNum'   => 'ref-123-123',
-            'Username' => $config['username'],
-            'Password' => $config['password']
+            'ref-123-123',
+            $config['merchant'],
+            $config['username'],
+            $config['password']
         ];
 
         $soap->call('reverseTransaction', $params)->willReturn(1);

@@ -310,10 +310,10 @@ class Saman implements PaymentProvider
 
         // Prepare parameters for soap call
         $parameters = [
-            'MID'      => $this->config->getMerchantId(),
-            'RefNum'   => $reference,
-            'Username' => $this->config->getUsername(),
-            'Password' => $this->config->getPassword()
+            $reference,
+            $this->config->getMerchantId(),
+            $this->config->getUsername(),
+            $this->config->getPassword()
         ];
 
         try {
