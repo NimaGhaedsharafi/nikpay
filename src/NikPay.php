@@ -3,6 +3,9 @@ namespace Nikapps\NikPay;
 
 use Nikapps\NikPay\Exceptions\BankNotFoundException;
 use Nikapps\NikPay\Exceptions\NotFoundConfigurationException;
+use Nikapps\NikPay\PaymentProviders\Arianpal\Arianpal;
+use Nikapps\NikPay\PaymentProviders\Arianpal\ArianpalConfig;
+use Nikapps\NikPay\PaymentProviders\Arianpal\ArianpalTranslator;
 use Nikapps\NikPay\PaymentProviders\PaymentConfig;
 use Nikapps\NikPay\PaymentProviders\PaymentProvider;
 use Nikapps\NikPay\PaymentProviders\Saman\Saman;
@@ -87,7 +90,8 @@ class NikPay
 
                 /** @var SamanConfig $config */
                 return $this->generateSamanPayment($config);
-
+            case Bank::Arianpal:
+                return $this->generateArianpalPayment($config);
             default:
                 throw new BankNotFoundException();
 
@@ -103,6 +107,17 @@ class NikPay
     protected function generateSamanPayment(SamanConfig $config)
     {
         return new Saman(new PhpSoapService(), $config);
+    }
+
+    /**
+     * generate Arianpal payment class
+     *
+     * @param ArianpalConfig $config
+     * @return Arianpal
+     */
+    protected function generateArianpalPayment(ArianpalConfig $config)
+    {
+        return new Arianpal(new PhpSoapService(), $config);
     }
 
     /**
@@ -129,6 +144,10 @@ class NikPay
         switch ($bank) {
             case Bank::SAMAN:
                 $this->translators[$bank] = new SamanTranslator();
+                break ;
+            case Bank::Arianpal:
+                $this->translators[$bank] = new ArianpalTranslator();
+                break ;
         }
     }
 }
